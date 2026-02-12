@@ -2,6 +2,7 @@ import os
 import librosa
 import numpy as np
 import pandas as pd
+import random
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from mutagen import File
@@ -92,6 +93,7 @@ for root, _, files in os.walk(MUSIC_DIR):
             path = os.path.join(root, file)
             #relative_path=path.replace('\\TOWER\Music-Mark\\',"")
             relative_path = os.path.relpath(path,MUSIC_DIR)
+            relative_path = relative_path.replace(os.sep,'/')
             try:
                 feat, tempo, rms, brightness = extract_features(path)
                 meta = get_metadata(path)
@@ -138,12 +140,13 @@ print("\nCreating playlists...\n")
 for playlist_id in sorted(df["playlist"].unique()):
     subset = df[df["playlist"] == playlist_id]
     playlist_name = name_playlist(subset)
+    shuffled_subset=random.shuffle(subset)
 
     safe_name = playlist_name.replace(" ", "_")
     playlist_path = os.path.join(OUTPUT_DIR, f"{safe_name} — {len(subset)} tracks.m3u")
 
     with open(playlist_path, "w", encoding="utf-8") as f:
-        for track_path in subset["relative_path"]:
+        for track_path in shuffled_subset["relative_path"]:
             f.write(track_path + "\n")
 
     print(f"Created: {playlist_name} — {len(subset)} tracks")
