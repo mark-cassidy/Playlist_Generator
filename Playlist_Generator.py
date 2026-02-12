@@ -2,7 +2,6 @@ import os
 import librosa
 import numpy as np
 import pandas as pd
-import random
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from mutagen import File
@@ -140,7 +139,7 @@ print("\nCreating playlists...\n")
 for playlist_id in sorted(df["playlist"].unique()):
     subset = df[df["playlist"] == playlist_id]
     playlist_name = name_playlist(subset)
-    shuffled_subset=random.shuffle(subset)
+    shuffled_subset = subset.sample(frac=1).reset_index(drop=True)
 
     safe_name = playlist_name.replace(" ", "_")
     playlist_path = os.path.join(OUTPUT_DIR, f"{safe_name} — {len(subset)} tracks.m3u")
