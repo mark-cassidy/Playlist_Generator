@@ -10,8 +10,18 @@ from mutagen import File
 # ==========================
 # CONFIGURATION
 # ==========================
-MUSIC_DIR = r"\\TOWER\Music-Mark"          # Path to your music folder
-OUTPUT_DIR = r"C:\Users\mark\Desktop"    # Where playlists will be saved
+MUSIC_DIR = os.environ.get(
+    "MUSIC_DIR",
+    "/data/Music"
+)
+
+OUTPUT_DIR = os.environ.get(
+    "OUTPUT_DIR",
+    "/data/Playlists"
+)
+
+#MUSIC_DIR = r"\\TOWER\Music-Mark"          # Path to your music folder
+#OUTPUT_DIR = r"C:\Users\mark\Desktop"    # Where playlists will be saved
 NUM_PLAYLISTS = 6           # Number of playlists to generate
 SUPPORTED_EXTS = (".mp3", ".flac", ".wav", ".m4a")
 
@@ -148,6 +158,6 @@ for playlist_id in sorted(df["playlist"].unique()):
         for track_path in shuffled_subset["relative_path"]:
             f.write(track_path + "\n")
 
-    print(f"Created: {playlist_name} — {len(subset)} tracks")
+    print(f"Created: {playlist_name} - {len(subset)} tracks")
 
 print("\nAll playlists generated successfully 🎵")
